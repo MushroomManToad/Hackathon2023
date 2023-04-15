@@ -33,7 +33,8 @@ public class CardObj : MonoBehaviour
         if (this.s != card.getSuit()) { card.setSuit(s); flag = true; }
         if (flag)
         {
-
+            // Load image if anything has updated.
+            image.sprite = Resources.Load<Sprite>("Sprites/" + card.getTexturePath());
         }
     }
 }

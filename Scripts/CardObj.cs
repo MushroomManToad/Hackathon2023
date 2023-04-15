@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardObj : MonoBehaviour
 {
@@ -8,12 +9,13 @@ public class CardObj : MonoBehaviour
     private Value v;
     [SerializeField]
     private Suit s;
+    [SerializeField]
+    Image image;
     Card card = new Card();
     // Start is called before the first frame update
     void Start()
     {
-        card.setValue(v);
-        card.setSuit(s);
+        cardDataUpdate();
     }
 
     // Update is called once per frame
@@ -26,7 +28,12 @@ public class CardObj : MonoBehaviour
     // Any other reason.
     private void cardDataUpdate()
     {
-        if (this.v != card.getValue()) { card.setValue(v); }
-        if (this.s != card.getSuit()) { card.setSuit(s); }
+        bool flag = false;
+        if (this.v != card.getValue()) { card.setValue(v); flag = true; }
+        if (this.s != card.getSuit()) { card.setSuit(s); flag = true; }
+        if (flag)
+        {
+
+        }
     }
 }

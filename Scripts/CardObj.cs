@@ -94,6 +94,12 @@ public class CardObj : MonoBehaviour
         // Empty Event
     }
 
+    public void setCardObjVals(Value v, Suit s)
+    {
+        this.v = v;
+        this.s = s;
+    }
+
     public Card getCard()
     {
         return card;

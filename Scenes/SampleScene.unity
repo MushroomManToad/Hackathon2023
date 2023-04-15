@@ -470,7 +470,7 @@ MonoBehaviour:
   excludedValues: 
   cardHolderPrefab: {fileID: 7425185952851823904, guid: d1465420df1fba3409571457ddce0646, type: 3}
   posOffsetCardHolder:
-  - 200
-  - 400
-  - 50
+  - 550
+  - 300
+  - -32
   screen: {fileID: 693744068}

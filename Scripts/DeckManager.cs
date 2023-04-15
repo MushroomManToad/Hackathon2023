@@ -52,6 +52,7 @@ public class DeckManager : MonoBehaviour
                 ch.setCards(cardHolderVals[s]);
                 ch.setSuit(s);
                 ch.setDM(this);
+                ch.updateCards();
             }
         }
     }

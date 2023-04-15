@@ -20,14 +20,9 @@ public class CardHolder : MonoBehaviour
     private Suit suit;
 
     // Index should always be valid. Update with a call to adjustPointer
-    private int pointerIndex = 0;
+    private int pointerIndex = 3;
 
-    private void Start()
-    {
-        updateCards();
-    }
-
-    private void updateCards()
+    public void updateCards()
     {
         sortCards();
         if(cards.Count > 0)
@@ -39,9 +34,8 @@ public class CardHolder : MonoBehaviour
                 CardObj newCardObj = card.GetComponent<CardObj>();
                 // I'm not null checking this. If it crashes, it crashes.
                 newCardObj.setCanvas(dm.getCanvas().GetComponent<Canvas>());
-                Card newCard = newCardObj.getCard();
-                newCard.setValue(((Card) cards[adjustPointer(pointerIndex)]).getValue());
-                newCard.setSuit(suit);
+                // Just set the values.
+                newCardObj.setCardObjVals(((Card) cards[adjustPointer(pointerIndex + i - 1)]).getValue(), suit);
             }           
         }   
     }

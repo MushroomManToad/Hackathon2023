@@ -52,6 +52,6 @@ MonoBehaviour:
   dm: {fileID: 0}
   cardPrefab: {fileID: 5143291186288156283, guid: 1448fa0dc01715b4892d0b85798cb95a, type: 3}
   cardOffsets:
-  - -100
+  - -24
   - 0
-  - 100
+  - 24

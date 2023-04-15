@@ -18,13 +18,15 @@ public class DeckManager : MonoBehaviour
     private Dictionary<Suit, ArrayList> cardHolderVals = new Dictionary<Suit, ArrayList>();
     // The cardHolders
     private Dictionary<Suit, CardHolder> cardHolders = new Dictionary<Suit, CardHolder>();
+    // The card functions
+    private ArrayList cardFunctions = new ArrayList();
 
     [SerializeField]
-    private GameObject cardHolderPrefab;
+    private GameObject cardHolderPrefab, cardFunctionPrefab;
 
     [Header("xPos, yPos, yOffset")]
     [SerializeField]
-    float[] posOffsetCardHolder;
+    float[] posOffsetCardHolder, posOffsetCardFunction;
 
     [SerializeField]
     GameObject screen;
@@ -33,7 +35,7 @@ public class DeckManager : MonoBehaviour
     private Vector2 cardHolderArea;
 
     [SerializeField]
-    private GameObject carryCardParent;
+    private GameObject carryCardParent, flippyCardParent;
 
     // Called first. Don't do anything else in any other class besides controlls with Awake
     private void Awake()
@@ -65,6 +67,9 @@ public class DeckManager : MonoBehaviour
                 cardHolders.Add(s, ch);
             }
         }
+
+        // Init the first Card Function
+        createNewCardFunction();
     }
 
     // Tries to generate a full deck
@@ -126,16 +131,28 @@ public class DeckManager : MonoBehaviour
         return carryCardParent;
     }
 
+    public GameObject getFlippyCardParent()
+    {
+        return flippyCardParent;
+    }
+
     // Returns the cardholder currently being hovered. null if none.
     public CardHolder isOnCardHolder(Vector2 mousePos)
     {
         CardHolder retCH = null;
-        foreach(CardHolder ch in cardHolders.Values)
+        Vector2 screenTransVar = Vector2.zero;
+
+        foreach (CardHolder ch in cardHolders.Values)
         {
-            if(mousePos.x >= ch.transform.position.x - posOffsetCardHolder[0] 
-                && mousePos.x <= ch.transform.position.x + posOffsetCardHolder[0]
-                && mousePos.y >= ch.transform.position.y - posOffsetCardHolder[1]
-                && mousePos.y <= ch.transform.position.y + posOffsetCardHolder[1])
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                (RectTransform)screen.GetComponent<Canvas>().transform,
+                ch.transform.position,
+                screen.GetComponent<Canvas>().worldCamera,
+                out screenTransVar);
+            if (mousePos.x >= screenTransVar.x - cardHolderArea[0] 
+                && mousePos.x <= screenTransVar.x + cardHolderArea[0]
+                && mousePos.y >= screenTransVar.y - cardHolderArea[1]
+                && mousePos.y <= screenTransVar.y + cardHolderArea[1])
             {
                 retCH = ch;
             }
@@ -143,8 +160,50 @@ public class DeckManager : MonoBehaviour
         return retCH;
     }
 
+    // Returns the cardholder currently being hovered. null if none.
+    public CardFunction isOnCardFunction(Vector2 mousePos)
+    {
+        CardFunction retCF = null;
+        Vector2 screenTransVar = Vector2.zero;
+
+        foreach (CardFunction cf in cardFunctions)
+        {
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                (RectTransform)screen.GetComponent<Canvas>().transform,
+                cf.transform.position,
+                screen.GetComponent<Canvas>().worldCamera,
+                out screenTransVar);
+            if (mousePos.x >= screenTransVar.x - cf.getCFDims().x
+                && mousePos.x <= screenTransVar.x + cf.getCFDims().x
+                && mousePos.y >= screenTransVar.y - cf.getCFDims().y
+                && mousePos.y <= screenTransVar.y + cf.getCFDims().y)
+            {
+                retCF = cf;
+            }
+        }
+        return retCF;
+    }
+
     public CardHolder getCardHolderBySuit(Suit s)
     {
         return (CardHolder) cardHolders[s];
+    }
+
+    public void createNewCardFunction()
+    {
+        GameObject cardFunction = Instantiate(cardFunctionPrefab,
+            new Vector3(posOffsetCardFunction[0], posOffsetCardFunction[1] + (cardFunctions.Count * posOffsetCardFunction[2]), transform.position.z),
+            Quaternion.identity,
+            screen.transform);
+
+        CardFunction function = cardFunction.GetComponent<CardFunction>();
+        function.setCanvas(screen.GetComponent<Canvas>());
+
+        cardFunctions.Add(function);
+    }
+
+    public ArrayList getCardFunctions()
+    {
+        return cardFunctions;
     }
 }

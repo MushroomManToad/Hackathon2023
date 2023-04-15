@@ -22,7 +22,7 @@ public class CardHolder : MonoBehaviour
     private Suit suit;
 
     // Index should always be valid. Update with a call to adjustPointer
-    private int pointerIndex = 3;
+    private int pointerIndex = 0;
 
     // Redraw cards after updating array
     public void updateCards()

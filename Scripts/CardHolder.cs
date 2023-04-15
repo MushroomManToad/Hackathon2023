@@ -35,6 +35,12 @@ public class CardHolder : MonoBehaviour
     // Redraw the cards without checking order
     private void refreshCards()
     {
+        // Destroy leftover gameobjects
+        foreach (Card card in livingCards)
+        {
+            Destroy(card.getCardObj().gameObject);
+        }
+        livingCards.Clear();
         if (cards.Count > 0)
         {
             // Place the 3 cards
@@ -55,12 +61,8 @@ public class CardHolder : MonoBehaviour
         }
         else
         {
-            foreach(Card card in livingCards)
-            {
-                removeLivingCard(card);
-                // Destroy any leftover gameobjects
-                Destroy(card.getCardObj());
-            }
+            // Empty array and reset size to 0
+            livingCards.Clear();
         }
     }
 

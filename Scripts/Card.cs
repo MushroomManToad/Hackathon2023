@@ -10,6 +10,18 @@ public class Card
     // Cards default to not flipped.
     private bool flipped = false;
 
+    public Card(Value v, Suit s)
+    { 
+        this.value = v;
+        this.suit = s;
+    }
+
+    public Card()
+    {
+        this.value = Value.ONE;
+        this.suit = Suit.CLUB;
+    }
+
     // Getters and setters
     public Value getValue() { return value; }
 
@@ -20,14 +32,6 @@ public class Card
 
     public bool getFlipped() { return flipped; }
     public bool flip() { flipped = !flipped; return flipped; }
-
-    public static Card newCard(Value value, Suit suit)
-    {
-        Card retCard = new Card();
-        retCard.value = value;
-        retCard.suit = suit;
-        return retCard;
-    }
 
     // used for dynamic resource loading.
     public string getTexturePath()

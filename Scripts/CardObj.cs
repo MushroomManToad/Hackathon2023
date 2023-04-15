@@ -49,7 +49,6 @@ public class CardObj : MonoBehaviour
         if (flag)
         {
             // Load image if anything has updated.
-            Debug.Log("Loaded image from " + "Sprites/" + card.getTexturePath());
             image.sprite = Resources.Load<Sprite>("Sprites/" + card.getTexturePath());
         }
     }
@@ -93,5 +92,15 @@ public class CardObj : MonoBehaviour
     public void pointerHandler(BaseEventData data)
     {
         // Empty Event
+    }
+
+    public Card getCard()
+    {
+        return card;
+    }
+
+    public void setCanvas(Canvas screen)
+    {
+        canvas = screen;
     }
 }

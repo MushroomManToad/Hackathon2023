@@ -15,6 +15,8 @@ public class CardHolder : MonoBehaviour
     [SerializeField]
     float[] cardOffsets;
 
+    private ArrayList livingCards = new ArrayList();
+
 
     private ArrayList cards;
     private Suit suit;
@@ -22,24 +24,35 @@ public class CardHolder : MonoBehaviour
     // Index should always be valid. Update with a call to adjustPointer
     private int pointerIndex = 3;
 
+    // Redraw cards after updating array
     public void updateCards()
     {
+        pointerIndex = adjustPointer(pointerIndex);
         sortCards();
-        if(cards.Count > 0)
+        refreshCards();
+    }
+
+    // Redraw the cards without checking order
+    private void refreshCards()
+    {
+        if (cards.Count > 0)
         {
             // Place the 3 cards
-            for(int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 GameObject card = Instantiate(cardPrefab, new Vector3(transform.position.x + cardOffsets[i], transform.position.y, transform.position.z), Quaternion.identity, dm.getCanvas().transform);
                 CardObj newCardObj = card.GetComponent<CardObj>();
                 // I'm not null checking this. If it crashes, it crashes.
                 newCardObj.setCanvas(dm.getCanvas().GetComponent<Canvas>());
                 // Just set the values.
-                newCardObj.setCardObjVals(((Card) cards[adjustPointer(pointerIndex + i - 1)]).getValue(), suit);
-            }           
-        }   
+                newCardObj.setCardObjVals(((Card)cards[adjustPointer(pointerIndex + i - 1)]).getValue(), suit);
+                newCardObj.setCardHolder(this);
+                // Keep track of cards living in this card holder to kill at the appropriate time.
+                livingCards.Add(newCardObj.GetComponent<CardObj>().getCard());
+            }
+        }
     }
-    
+
     // Adjust the pointer when it's out of bounds.
     private int adjustPointer(int newPointerVal)
     {
@@ -98,5 +111,32 @@ public class CardHolder : MonoBehaviour
     public void setDM(DeckManager dm)
     {
         this.dm = dm;
+    }
+
+    public void removeLivingCard(Card card)
+    {
+        livingCards.Remove(card);
+    }
+
+    public void removeCard(Card card)
+    {
+        // This card object is different, so we need to check each card for if it matches suit and val
+        foreach (Card cardS in cards)
+        {
+            // Remove the first matching card, then break and update cards
+            if(cardS.getValue() == card.getValue() && cardS.getSuit() == card.getSuit())
+            {
+                cards.Remove(cardS);
+                break;
+            }
+        }
+        updateCards();
+    }
+
+    // This is the one that's gonna lag lol
+    public void addCard(Card card)
+    { 
+        cards.Add(card);
+        updateCards();
     }
 }

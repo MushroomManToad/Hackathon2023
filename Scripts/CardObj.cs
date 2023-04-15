@@ -15,6 +15,9 @@ public class CardObj : MonoBehaviour
     Image image;
     Card card = new Card();
 
+    // Track the active card holder containing it. Can be null when not in a card holder
+    CardHolder ch = null;
+
     Vector2 initialPos;
 
     [SerializeField]
@@ -57,6 +60,7 @@ public class CardObj : MonoBehaviour
     // Movement handlers. These are kinda magic.
     public void DragHandler(BaseEventData data)
     {
+        // Adjust the position
         PointerEventData pointerData = (PointerEventData)data;
 
         Vector2 mousePos;
@@ -67,6 +71,14 @@ public class CardObj : MonoBehaviour
             out mousePos);
 
         transform.position = canvas.transform.TransformPoint(mousePos);
+
+        // Remove from appropriate card holder's livingCards and cards.
+        if (ch != null)
+        {
+            ch.removeLivingCard(card);
+            ch.removeCard(card);
+            ch = null;
+        }
     }
 
     public void DropHandler(BaseEventData data)
@@ -108,5 +120,10 @@ public class CardObj : MonoBehaviour
     public void setCanvas(Canvas screen)
     {
         canvas = screen;
+    }
+
+    public void setCardHolder(CardHolder holder)
+    {
+        this.ch = holder;
     }
 }

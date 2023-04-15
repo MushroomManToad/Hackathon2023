@@ -37,6 +37,8 @@ public class DeckManager : MonoBehaviour
     [SerializeField]
     private GameObject carryCardParent, flippyCardParent;
 
+    private DeckCompiler compiler;
+
     // Called first. Don't do anything else in any other class besides controlls with Awake
     private void Awake()
     {
@@ -70,6 +72,9 @@ public class DeckManager : MonoBehaviour
 
         // Init the first Card Function
         createNewCardFunction();
+
+        // Init the compiler
+         compiler = new DeckCompiler(this);
     }
 
     // Tries to generate a full deck
@@ -205,5 +210,10 @@ public class DeckManager : MonoBehaviour
     public ArrayList getCardFunctions()
     {
         return cardFunctions;
+    }
+
+    public void compile()
+    {
+        compiler.runFunctions();
     }
 }

@@ -18,6 +18,9 @@ public class CardObj : MonoBehaviour
     // Track the active card holder containing it. Can be null when not in a card holder
     CardHolder ch = null;
 
+    // Track the active card function containing it. Can be null when not in a card function
+    CardFunction cf = null;
+
     Vector2 initialPos;
 
     [SerializeField]
@@ -26,6 +29,8 @@ public class CardObj : MonoBehaviour
     private DeckManager dm;
 
     private bool isMoving = false;
+
+    bool flippedDirty = true;
 
     // Start is called before the first frame update
     void Start()
@@ -50,13 +55,28 @@ public class CardObj : MonoBehaviour
     // Any other reason.
     private void cardDataUpdate()
     {
-        bool flag = false;
-        if (this.v != card.getValue()) { card.setValue(v); flag = true; }
-        if (this.s != card.getSuit()) { card.setSuit(s); flag = true; }
-        if (flag)
+        if(!card.getFlipped())
         {
-            // Load image if anything has updated.
-            image.sprite = Resources.Load<Sprite>("Sprites/" + card.getTexturePath());
+            bool flag = flippedDirty;
+            if (this.v != card.getValue()) { card.setValue(v); flag = true; }
+            if (this.s != card.getSuit()) { card.setSuit(s); flag = true; }
+            if (flag)
+            {
+                // Load image if anything has updated.
+                image.sprite = Resources.Load<Sprite>("Sprites/" + card.getTexturePath());
+                transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            }
+            flippedDirty = false;
+        }
+        else
+        {
+            // Sprite should be set correctly at all times
+            if (flippedDirty)
+            {
+                image.sprite = Resources.Load<Sprite>("Sprites/card_back");
+                transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+                flippedDirty = false;
+            }
         }
     }
 
@@ -109,7 +129,7 @@ public class CardObj : MonoBehaviour
                 out mousePos);
 
             // Set parent
-            transform.SetParent(transform.parent.transform);
+            //transform.SetParent(transform.parent.transform);
 
             //Vector2 snapPos = Vector2.zero;
 
@@ -118,8 +138,22 @@ public class CardObj : MonoBehaviour
             // Add to CardHolder on Drop if it's over it. Also mark CardObj for Destruction
             if(dm.isOnCardHolder(mousePos) != null)
             {
+                // Make sure it's facing the right way
+                if (card.getFlipped()) flip();
                 dm.getCardHolderBySuit(getCard().getSuit()).addCard(card);
                 Destroy(gameObject);
+            }
+
+            CardFunction hoverFunction = dm.isOnCardFunction(mousePos);
+
+            if (hoverFunction != null)
+            {
+                if (hoverFunction.Count() == 0)
+                {
+                    dm.createNewCardFunction();
+                }
+                hoverFunction.addCardToFunction(card);
+                
             }
 
             //transform.position = canvas.transform.TransformPoint(snapPos);
@@ -134,6 +168,18 @@ public class CardObj : MonoBehaviour
         if (ch != null)
         {
             ch.addToPointerIndex(pointerData.scrollDelta.y < 0.0f);
+        }
+    }
+
+    public void RightClickHandler(BaseEventData data)
+    {
+        PointerEventData eventData = (PointerEventData)data;
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if (ch == null)
+            {
+                flip();
+            }
         }
     }
 
@@ -166,5 +212,18 @@ public class CardObj : MonoBehaviour
     public void setDeckManager(DeckManager deckManager)
     {
         this.dm = deckManager;
+    }
+
+    private void flip()
+    {
+        card.flip();
+        if(!card.getFlipped() ) { transform.SetParent(dm.getCarryCardParent().transform); }
+        else transform.SetParent(dm.getFlippyCardParent().transform);
+        flippedDirty = true;
+    }
+
+    public void setCardFunction(CardFunction function)
+    {
+        this.cf = function;
     }
 }

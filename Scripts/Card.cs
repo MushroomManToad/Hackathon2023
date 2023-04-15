@@ -57,46 +57,46 @@ public class Card
         switch (value)
         {
             case (Value.ONE):
-                s = "one";
+                v = "ace";
                 break;
             case (Value.TWO):
-                s = "two";
+                v = "two";
                 break;
             case (Value.THREE):
-                s = "three";
+                v = "three";
                 break;
             case (Value.FOUR):
-                s = "four";
+                v = "four";
                 break;
             case (Value.FIVE):
-                s = "five";
+                v = "five";
                 break;
             case (Value.SIX):
-                s = "six";
+                v = "six";
                 break;
             case (Value.SEVEN):
-                s = "seven";
+                v = "seven";
                 break;
             case (Value.EIGHT):
-                s = "eight";
+                v = "eight";
                 break;
             case (Value.NINE):
-                s = "nine";
+                v = "nine";
                 break;
             case (Value.TEN):
-                s = "ten";
+                v = "ten";
                 break;
             case (Value.JACK):
-                s = "jack";
+                v = "jack";
                 break;
             case (Value.QUEEN):
-                s = "queen";
+                v = "queen";
                 break;
             case (Value.KING):
-                s = "king";
+                v = "king";
                 break;
             default:
-                s = string.Empty;
+                v = string.Empty;
                 break;
         }
         return s + "_" + v;

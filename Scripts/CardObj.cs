@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cardobj : MonoBehaviour
+public class CardObj : MonoBehaviour
 {
     [SerializeField]
     private Value v;

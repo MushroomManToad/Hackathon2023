@@ -23,6 +23,10 @@ public class CardObj : MonoBehaviour
     [SerializeField]
     private Canvas canvas;
 
+    private DeckManager dm;
+
+    private bool isMoving = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,6 +64,9 @@ public class CardObj : MonoBehaviour
     // Movement handlers. These are kinda magic.
     public void DragHandler(BaseEventData data)
     {
+        // Tracker to fix a weird bug.
+        isMoving = true;
+
         // Adjust the position
         PointerEventData pointerData = (PointerEventData)data;
 
@@ -72,6 +79,12 @@ public class CardObj : MonoBehaviour
 
         transform.position = canvas.transform.TransformPoint(mousePos);
 
+        // Set parent
+        if(transform.parent != dm.getCarryCardParent())
+        {
+            transform.SetParent(dm.getCarryCardParent().transform);
+        }
+
         // Remove from appropriate card holder's livingCards and cards.
         if (ch != null)
         {
@@ -83,22 +96,40 @@ public class CardObj : MonoBehaviour
 
     public void DropHandler(BaseEventData data)
     {
+        // Only drop if selected
+        if(isMoving)
+        {
+            PointerEventData pointerData = (PointerEventData)data;
+
+            Vector2 mousePos;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                (RectTransform)canvas.transform,
+                pointerData.position,
+                canvas.worldCamera,
+                out mousePos);
+
+            // Set parent
+            transform.SetParent(transform.parent.transform);
+
+            //Vector2 snapPos = Vector2.zero;
+
+            // Smart drop logic goes here.
+
+            // Add to CardHolder on Drop if it's over it.
+
+            //transform.position = canvas.transform.TransformPoint(snapPos);
+            isMoving = false;
+        }
+    }
+
+    public void ScrollHandler(BaseEventData data)
+    {
         PointerEventData pointerData = (PointerEventData)data;
 
-        Vector2 mousePos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            (RectTransform)canvas.transform,
-            pointerData.position,
-            canvas.worldCamera,
-            out mousePos);
-
-
-
-        Vector2 snapPos = Vector2.zero;
-
-        // Smart drop logic goes here.
-
-        transform.position = canvas.transform.TransformPoint(snapPos);
+        if (ch != null)
+        {
+            ch.addToPointerIndex(pointerData.scrollDelta.y < 0.0f);
+        }
     }
 
     public void pointerHandler(BaseEventData data)
@@ -125,5 +156,10 @@ public class CardObj : MonoBehaviour
     public void setCardHolder(CardHolder holder)
     {
         this.ch = holder;
+    }
+
+    public void setDeckManager(DeckManager deckManager)
+    {
+        this.dm = deckManager;
     }
 }

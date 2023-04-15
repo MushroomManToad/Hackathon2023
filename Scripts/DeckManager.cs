@@ -27,6 +27,12 @@ public class DeckManager : MonoBehaviour
     [SerializeField]
     GameObject screen;
 
+    [SerializeField]
+    private Vector2 cardHolderArea;
+
+    [SerializeField]
+    private GameObject carryCardParent;
+
     // Called first. Don't do anything else in any other class besides controlls with Awake
     private void Awake()
     {
@@ -55,18 +61,6 @@ public class DeckManager : MonoBehaviour
                 ch.updateCards();
             }
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     // Tries to generate a full deck
@@ -121,5 +115,10 @@ public class DeckManager : MonoBehaviour
     public GameObject getCanvas()
     {
         return screen;
+    }
+
+    public GameObject getCarryCardParent()
+    {
+        return carryCardParent;
     }
 }

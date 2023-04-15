@@ -10,6 +10,8 @@ public class Card
     // Cards default to not flipped.
     private bool flipped = false;
 
+    private CardObj cardObj;
+
     public Card(Value v, Suit s)
     { 
         this.value = v;
@@ -104,5 +106,15 @@ public class Card
                 break;
         }
         return s + "_" + v;
+    }
+
+    public void setCardObj(CardObj cardObj)
+    {
+        this.cardObj = cardObj;
+    }
+
+    public CardObj getCardObj()
+    {
+        return cardObj;
     }
 }

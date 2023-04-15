@@ -46,9 +46,20 @@ public class CardHolder : MonoBehaviour
                 newCardObj.setCanvas(dm.getCanvas().GetComponent<Canvas>());
                 // Just set the values.
                 newCardObj.setCardObjVals(((Card)cards[adjustPointer(pointerIndex + i - 1)]).getValue(), suit);
+                newCardObj.getCard().setCardObj(newCardObj);
                 newCardObj.setCardHolder(this);
+                newCardObj.setDeckManager(dm);
                 // Keep track of cards living in this card holder to kill at the appropriate time.
                 livingCards.Add(newCardObj.GetComponent<CardObj>().getCard());
+            }
+        }
+        else
+        {
+            foreach(Card card in livingCards)
+            {
+                removeLivingCard(card);
+                // Destroy any leftover gameobjects
+                Destroy(card.getCardObj());
             }
         }
     }
@@ -58,7 +69,7 @@ public class CardHolder : MonoBehaviour
     {
         if(newPointerVal < 0)
         {
-            newPointerVal = cards.Count;
+            newPointerVal = cards.Count - 1;
         }
         if(newPointerVal >= cards.Count) 
         {
@@ -118,13 +129,21 @@ public class CardHolder : MonoBehaviour
         livingCards.Remove(card);
     }
 
+    // This is the one that's gonna lag lol
+    public void addCard(Card card)
+    { 
+        cards.Add(card);
+        updateCards();
+    }
+
+    // This one is worse.
     public void removeCard(Card card)
     {
         // This card object is different, so we need to check each card for if it matches suit and val
         foreach (Card cardS in cards)
         {
             // Remove the first matching card, then break and update cards
-            if(cardS.getValue() == card.getValue() && cardS.getSuit() == card.getSuit())
+            if (cardS.getValue() == card.getValue() && cardS.getSuit() == card.getSuit())
             {
                 cards.Remove(cardS);
                 break;
@@ -133,10 +152,9 @@ public class CardHolder : MonoBehaviour
         updateCards();
     }
 
-    // This is the one that's gonna lag lol
-    public void addCard(Card card)
-    { 
-        cards.Add(card);
-        updateCards();
+    public void addToPointerIndex(bool negative)
+    {
+        pointerIndex = adjustPointer(pointerIndex + (negative ? -1 : 1));
+        refreshCards();
     }
 }

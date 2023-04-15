@@ -115,7 +115,12 @@ public class CardObj : MonoBehaviour
 
             // Smart drop logic goes here.
 
-            // Add to CardHolder on Drop if it's over it.
+            // Add to CardHolder on Drop if it's over it. Also mark CardObj for Destruction
+            if(dm.isOnCardHolder(mousePos) != null)
+            {
+                dm.getCardHolderBySuit(getCard().getSuit()).addCard(card);
+                Destroy(gameObject);
+            }
 
             //transform.position = canvas.transform.TransformPoint(snapPos);
             isMoving = false;

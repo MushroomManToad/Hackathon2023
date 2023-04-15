@@ -16,6 +16,8 @@ public class DeckManager : MonoBehaviour
     private ArrayList cards = new ArrayList();
     // The values currently in the cardHolders
     private Dictionary<Suit, ArrayList> cardHolderVals = new Dictionary<Suit, ArrayList>();
+    // The cardHolders
+    private Dictionary<Suit, CardHolder> cardHolders = new Dictionary<Suit, CardHolder>();
 
     [SerializeField]
     private GameObject cardHolderPrefab;
@@ -59,6 +61,8 @@ public class DeckManager : MonoBehaviour
                 ch.setSuit(s);
                 ch.setDM(this);
                 ch.updateCards();
+
+                cardHolders.Add(s, ch);
             }
         }
     }
@@ -120,5 +124,27 @@ public class DeckManager : MonoBehaviour
     public GameObject getCarryCardParent()
     {
         return carryCardParent;
+    }
+
+    // Returns the cardholder currently being hovered. null if none.
+    public CardHolder isOnCardHolder(Vector2 mousePos)
+    {
+        CardHolder retCH = null;
+        foreach(CardHolder ch in cardHolders.Values)
+        {
+            if(mousePos.x >= ch.transform.position.x - posOffsetCardHolder[0] 
+                && mousePos.x <= ch.transform.position.x + posOffsetCardHolder[0]
+                && mousePos.y >= ch.transform.position.y - posOffsetCardHolder[1]
+                && mousePos.y <= ch.transform.position.y + posOffsetCardHolder[1])
+            {
+                retCH = ch;
+            }
+        }
+        return retCH;
+    }
+
+    public CardHolder getCardHolderBySuit(Suit s)
+    {
+        return (CardHolder) cardHolders[s];
     }
 }

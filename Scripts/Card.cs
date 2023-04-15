@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class Card
+public class Card : IComparable
 {
     // Card Fields, configurable from the Editor
     private Value value;
@@ -116,5 +117,21 @@ public class Card
     public CardObj getCardObj()
     {
         return cardObj;
+    }
+
+    public int CompareTo(object c)
+    {
+        if((int)value > (int)((Card)c).value)
+        {
+            return 1;
+        }
+        else if ((int)value < (int)((Card)c).value)
+        {
+            return -1;
+        }
+        else 
+        {
+            return 0;
+        }
     }
 }

@@ -28,7 +28,7 @@ public class CardHolder : MonoBehaviour
     public void updateCards()
     {
         pointerIndex = adjustPointer(pointerIndex);
-        sortCards();
+        cards.Sort();
         refreshCards();
     }
 
@@ -69,45 +69,22 @@ public class CardHolder : MonoBehaviour
     // Adjust the pointer when it's out of bounds.
     private int adjustPointer(int newPointerVal)
     {
-        if(newPointerVal < 0)
+        if(cards.Count > 0)
         {
-            newPointerVal = cards.Count - 1;
+            if (newPointerVal < 0)
+            {
+                newPointerVal = cards.Count - 1;
+            }
+            if (newPointerVal >= cards.Count)
+            {
+                newPointerVal = 0;
+            }
         }
-        if(newPointerVal >= cards.Count) 
+        else
         {
             newPointerVal = 0;
         }
         return newPointerVal;
-    }
-
-    // Hecking insertion sort. [heck] you.
-    private void sortCards()
-    {
-        for (int i = 0; i < cards.Count; i++)
-        {
-            int minDex = findMinFrom(i);
-            Card card1 = (Card) cards[i];
-            Card card2 = (Card)cards[minDex];
-
-            cards[i] = card2;
-            cards[minDex] = card1;
-        }
-    }
-
-    // This is stupid and inefficient. But I could figure it out at midnight.
-    private int findMinFrom(int index)
-    {
-        Card minCard = (Card) cards[index];
-        int minDex = index;
-        for(int i = index; i < cards.Count; i++)
-        {
-            if ((int)((Card)cards[i]).getValue() < (int)minCard.getValue())
-            {
-                minCard = (Card)cards[i];
-                minDex = index;
-            }
-        }
-        return minDex;
     }
 
     // Setters for init.

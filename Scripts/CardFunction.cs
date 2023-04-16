@@ -84,7 +84,7 @@ public class CardFunction : MonoBehaviour
         openPos += amount;
         cfDims.x += offsetByCard * amount;
         cfBG.gameObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, cfDims.x);
-        cfBG.transform.position = new Vector3((((float)cfDims.x) / 2.0f) + transform.position.x - 16, transform.position.y, transform.position.z);
+        cfBG.transform.position = new Vector3((((float)cfDims.x) / 2.0f) + transform.position.x - (offsetByCard /2), transform.position.y, transform.position.z);
     }
 
     public Vector2 getCFDims()

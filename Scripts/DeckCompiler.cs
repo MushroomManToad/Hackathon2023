@@ -184,13 +184,13 @@ public class DeckCompiler
         switch (card.getValue())
         {
             case Value.JACK:
-                Debug.Log("JACK");
+                dm.movePlayer(1);
                 break;
             case Value.QUEEN:
-                Debug.Log("QUEEN");
+                dm.rotatePlayer(true);
                 break;
             case Value.KING:
-                Debug.Log("KING");
+                dm.rotatePlayer(false);
                 break;
         }
     }

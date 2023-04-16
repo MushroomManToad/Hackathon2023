@@ -39,6 +39,9 @@ public class DeckManager : MonoBehaviour
 
     private DeckCompiler compiler;
 
+    [SerializeField]
+    private GameObject playerObj;
+
     // Called first. Don't do anything else in any other class besides controlls with Awake
     private void Awake()
     {
@@ -215,5 +218,75 @@ public class DeckManager : MonoBehaviour
     public void compile()
     {
         compiler.runFunctions();
+    }
+
+    public void movePlayer(int amount)
+    {
+        PlayerScripts ps = playerObj.GetComponent<PlayerScripts>();
+        switch(ps.getFacing())
+        {
+            case(Facing.UP):
+                playerObj.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y + amount, playerObj.transform.position.z);
+                break;
+            case (Facing.DOWN):
+                playerObj.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y - amount, playerObj.transform.position.z);
+                break;
+            case (Facing.RIGHT):
+                playerObj.transform.position = new Vector3(playerObj.transform.position.x + amount, playerObj.transform.position.y, playerObj.transform.position.z);
+                break;
+            case (Facing.LEFT):
+                playerObj.transform.position = new Vector3(playerObj.transform.position.x - amount, playerObj.transform.position.y, playerObj.transform.position.z);
+                break;
+        }
+    }
+
+    public void rotatePlayer(bool clockwise)
+    {
+        if(clockwise)
+        {
+            PlayerScripts ps = playerObj.GetComponent<PlayerScripts>();
+            switch (ps.getFacing())
+            {
+                case (Facing.UP):
+                    playerObj.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                    ps.setFacing(Facing.RIGHT);
+                    break;
+                case (Facing.DOWN):
+                    playerObj.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+                    ps.setFacing(Facing.LEFT);
+                    break;
+                case (Facing.RIGHT):
+                    playerObj.transform.rotation = Quaternion.Euler(0f, 0f, 270f);
+                    ps.setFacing(Facing.DOWN);
+                    break;
+                case (Facing.LEFT):
+                    playerObj.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+                    ps.setFacing(Facing.UP);
+                    break;
+            }
+        }
+        else
+        {
+            PlayerScripts ps = playerObj.GetComponent<PlayerScripts>();
+            switch (ps.getFacing())
+            {
+                case (Facing.UP):
+                    playerObj.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+                    ps.setFacing(Facing.LEFT);
+                    break;
+                case (Facing.DOWN):
+                    playerObj.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                    ps.setFacing(Facing.RIGHT);
+                    break;
+                case (Facing.RIGHT):
+                    playerObj.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+                    ps.setFacing(Facing.UP);
+                    break;
+                case (Facing.LEFT):
+                    playerObj.transform.rotation = Quaternion.Euler(0f, 0f, 270f);
+                    ps.setFacing(Facing.DOWN);
+                    break;
+            }
+        }
     }
 }
